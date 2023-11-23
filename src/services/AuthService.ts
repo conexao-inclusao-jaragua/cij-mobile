@@ -3,7 +3,7 @@ import axios from "../api";
 import { TLogin, TUser } from "../types";
 import { GENDER } from "../types/TUser";
 
-const basePath = "/users/login";
+const basePath = "/login/user";
 
 class LoginService {
   async login(user: TLogin) {
@@ -12,17 +12,8 @@ class LoginService {
     });
   }
 
-  async getMe(token: string): Promise<TUser | null> {
-    await axios.get("/health");
-
-    return {
-      cpf: "123",
-      email: "kenzo@gmail",
-      gender: GENDER.Male,
-      id: 1,
-      name: "Kenzo",
-      password: "123",
-    } as TUser;
+  async getMe(token: string) {
+    return await axios.post("/get-user-data", { token });
   }
 }
 

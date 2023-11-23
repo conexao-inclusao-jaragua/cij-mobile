@@ -30,6 +30,7 @@ import { useSecureStore } from "../../hooks/useSecureStore.ts";
 import { TLogin, TToast } from "../../types";
 
 import { styles, sxs } from "./signin.style.ts";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Signin = () => {
   const dispatch = useAppDispatch();
@@ -81,8 +82,8 @@ const Signin = () => {
       const res = await LoginService.login(login);
       delete res.data.user_info.password;
 
+      await store.save("token", res.data.token);
       dispatch(defineUser({ user: res.data.user_info }));
-      store.save("token", res.data.token);
 
       toast.showToast({
         action: "success",
@@ -91,7 +92,6 @@ const Signin = () => {
       } as TToast);
 
       router.push("/");
-      console.log("response:", res);
     } catch (error) {
       toast.showToast({
         action: "error",
@@ -106,60 +106,70 @@ const Signin = () => {
   // $primary400 é o padrão
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Box style={styles.container}>
-        <FormControl style={styles.form} isInvalid={form.isInvalid}>
-          <Box>
-            <FormControlLabel>
-              <FormControlLabelText sx={sxs.formLabel}>
-                Email
-              </FormControlLabelText>
-            </FormControlLabel>
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+      >
+        <Box style={styles.container}>
+          <FormControl style={styles.form} isInvalid={form.isInvalid}>
+            <Box>
+              <FormControlLabel>
+                <FormControlLabelText sx={sxs.formLabel}>
+                  Email
+                </FormControlLabelText>
+              </FormControlLabel>
 
-            <Input isRequired>
-              <InputField value={login.email} onChange={handleEmailChange} />
-            </Input>
-          </Box>
+              <Input isRequired>
+                <InputField value={login.email} onChange={handleEmailChange} />
+              </Input>
+            </Box>
 
-          <Box>
-            <FormControlLabel>
-              <FormControlLabelText sx={sxs.formLabel}>
-                Password
-              </FormControlLabelText>
-            </FormControlLabel>
+            <Box>
+              <FormControlLabel>
+                <FormControlLabelText sx={sxs.formLabel}>
+                  Senha
+                </FormControlLabelText>
+              </FormControlLabel>
 
-            <Input isRequired>
-              <InputField
-                value={login.password}
-                onChange={handlePasswordChange}
-                type={isPasswordVisible ? "text" : "password"}
-              />
+              <Input isRequired>
+                <InputField
+                  value={login.password}
+                  onChange={handlePasswordChange}
+                  type={isPasswordVisible ? "text" : "password"}
+                />
 
-              <InputSlot pr="$3" onPress={toggleVisibility}>
-                {isPasswordVisible ? (
-                  <InputIcon as={EyeIcon} color="$darkBlue300" size="lg" />
-                ) : (
-                  <InputIcon as={EyeOffIcon} color="$darkBlue300" size="lg" />
-                )}
-              </InputSlot>
-            </Input>
-          </Box>
+                <InputSlot pr="$3" onPress={toggleVisibility}>
+                  {isPasswordVisible ? (
+                    <InputIcon as={EyeIcon} color="$darkBlue300" size="lg" />
+                  ) : (
+                    <InputIcon as={EyeOffIcon} color="$darkBlue300" size="lg" />
+                  )}
+                </InputSlot>
+              </Input>
+            </Box>
 
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>
-              Insira todas as informações
-            </FormControlErrorText>
-          </FormControlError>
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>
+                Insira todas as informações
+              </FormControlErrorText>
+            </FormControlError>
 
-          <Button onPress={authenticate}>
-            <Text color="$textLight0">Entrar</Text>
-          </Button>
+            <Button onPress={authenticate}>
+              <Text color="$textLight0">Entrar</Text>
+            </Button>
 
-          <Link style={styles.withoutLoginText} href="/">
-            Continuar sem Login
-          </Link>
-        </FormControl>
-      </Box>
+            <Link style={styles.withoutLoginText} href="/">
+              Continuar sem Login
+            </Link>
+
+            <Link style={styles.withoutLoginText} href="/signup">
+              Cadastre-se
+            </Link>
+          </FormControl>
+        </Box>
+      </KeyboardAwareScrollView>
     </SafeAreaView>
   );
 };

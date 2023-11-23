@@ -19,10 +19,16 @@ const Home = () => {
     const token = await store.getValueFor("token");
 
     if (typeof token == "string") {
-      const user = await AuthService.getMe(token);
+      try {
+        const res = await AuthService.getMe(token);
+        const user = res.data.user_info;
 
-      if (user) {
-        dispatch(defineUser({ user }));
+        if (user) {
+          dispatch(defineUser({ user }));
+        }
+      } catch (err) {
+        console.log(err);
+        await store.deleteValueFor("token");
       }
     }
   };

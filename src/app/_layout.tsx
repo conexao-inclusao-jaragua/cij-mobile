@@ -15,6 +15,8 @@ import { config } from "../config/gluestack-ui.config";
 import { store } from "../redux/store";
 import { Provider } from "react-redux";
 
+// import Logo from "../assets/images/conexao-inclusao-jaragua-icone-azul.png";
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
@@ -62,10 +64,18 @@ function RootLayoutNav() {
         <Stack>
           <Stack.Screen
             name="(home)/index"
-            options={{ headerTitle: "", headerRight: () => <UserIcon /> }}
+            options={{
+              headerTitle: "",
+              headerRight: () => <UserIcon />,
+              // headerLeft: () => <Image source={Logo} />,
+            }}
           />
           <Stack.Screen
             name="(signin)/signin"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="(signup)/signup"
             options={{ headerShown: false }}
           />
         </Stack>
