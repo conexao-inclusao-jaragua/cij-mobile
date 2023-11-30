@@ -5,10 +5,10 @@ import { Text } from "react-native";
 import { Button } from "@gluestack-ui/themed";
 
 import { useSecureStore } from "../../hooks/useSecureStore";
-import AuthService from "../../services/AuthService";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { defineUser, removeUser } from "../../redux/user/uesrSlice";
 import axios from "axios";
+import UserService from "../../services/UserService";
 
 const Home = () => {
   const router = useRouter();
@@ -21,7 +21,7 @@ const Home = () => {
 
     if (typeof token == "string") {
       try {
-        const res = await AuthService.getMe(token);
+        const res = await UserService.getUserByToken(token);
         const user = res.data.user_info;
 
         if (user) {
@@ -46,8 +46,8 @@ const Home = () => {
       .get(
         "https://ec2-18-228-222-57.sa-east-1.compute.amazonaws.com:3040/health"
       )
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
+      .then((res: any) => console.log(res.data))
+      .catch((err: any) => console.log(err));
   };
 
   useEffect(() => {

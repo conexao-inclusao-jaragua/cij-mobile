@@ -23,7 +23,6 @@ import {
 
 import { useAppDispatch } from "../../redux/hooks.ts";
 import { defineUser } from "../../redux/user/uesrSlice.ts";
-import LoginService from "../../services/AuthService.ts";
 import { useToast } from "../../hooks/useToast.tsx";
 import { useSecureStore } from "../../hooks/useSecureStore.ts";
 
@@ -31,6 +30,9 @@ import { TLogin, TToast } from "../../types";
 
 import { styles, sxs } from "./signin.style.ts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
+import LoginService from "../../services/AuthService.ts";
+import UserService from "../../services/UserService.ts";
 
 const Signin = () => {
   const dispatch = useAppDispatch();
@@ -80,10 +82,13 @@ const Signin = () => {
 
     try {
       const res = await LoginService.login(login);
-      delete res.data.user_info.password;
 
       await store.save("token", res.data.token);
-      dispatch(defineUser({ user: res.data.user_info }));
+
+      const userInfoRes = await UserService.getUserByToken(res.data.token);
+      const userInfo = userInfoRes.data.user_info;
+
+      dispatch(defineUser({ user: userInfo }));
 
       toast.showToast({
         action: "success",

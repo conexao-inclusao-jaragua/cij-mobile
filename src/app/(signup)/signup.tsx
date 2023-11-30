@@ -17,7 +17,6 @@ import {
   InputField,
   InputIcon,
   InputSlot,
-  KeyboardAvoidingView,
   Radio,
   RadioGroup,
   RadioIcon,
@@ -75,15 +74,23 @@ const SignUp = () => {
           return;
         }
 
-        UserService.create(user).then((res) => {
-          toast.showToast({
-            action: "success",
-            title: "Sucesso",
-            message: "Usuário criado com sucesso",
-          } as TToast);
+        UserService.create(user)
+          .then((res: any) => {
+            toast.showToast({
+              action: "success",
+              title: "Sucesso",
+              message: "Usuário criado com sucesso",
+            } as TToast);
 
-          router.push("/signin");
-        });
+            router.push("/signin");
+          })
+          .catch((err: any) => {
+            toast.showToast({
+              action: "error",
+              title: "Erro",
+              message: "Erro ao criar usuário",
+            } as TToast);
+          });
       })
       .catch((err) => {
         setForm({ isInvalid: true });
