@@ -8,6 +8,7 @@ import { useSecureStore } from "../../hooks/useSecureStore";
 import AuthService from "../../services/AuthService";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { defineUser, removeUser } from "../../redux/user/uesrSlice";
+import axios from "axios";
 
 const Home = () => {
   const router = useRouter();
@@ -40,6 +41,15 @@ const Home = () => {
     router.push("/signin");
   };
 
+  const getHealth = () => {
+    axios
+      .get(
+        "https://ec2-18-228-222-57.sa-east-1.compute.amazonaws.com:3040/health"
+      )
+      .then((res) => console.log(res.data))
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     getToken();
   }, []);
@@ -47,7 +57,7 @@ const Home = () => {
   return (
     <SafeAreaView>
       <Text>Home</Text>
-      <Button onPress={() => getToken()}>
+      <Button onPress={() => getHealth()}>
         <Text>save</Text>
       </Button>
 
