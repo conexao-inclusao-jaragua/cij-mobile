@@ -15,6 +15,7 @@ export const userSchema = yup.object().shape({
     .required("O email é obrigatório"),
   password: yup.string().required("A senha é obrigatória"),
   gender: yup.string().required("O gênero é obrigatório"),
+  phone: yup.string().length(13, "O telefone deve ter 13 dígitos").required(),
 });
 
 export const companySchema = yup.object().shape({
